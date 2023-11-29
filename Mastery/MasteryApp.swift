@@ -14,5 +14,6 @@ struct MasteryApp: App {
         WindowGroup {
             ContentView()
         }
+        .modelContainer(for: Deck.self)
     }
 }
