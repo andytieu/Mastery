@@ -9,14 +9,16 @@ import SwiftUI
 import SwiftData
 
 @Model
-class Deck {
+final class Deck {
     public var name: String
     public var colorIndex: Int
     @Attribute(.externalStorage) public var image: Data?
+    public var order: Int
     
-    init(name: String, colorIndex: Int, image: Data?) {
+    init(name: String, colorIndex: Int, image: Data?, order: Int) {
         self.name = name
         self.colorIndex = colorIndex
         self.image = image
+        self.order = order
     }
 }

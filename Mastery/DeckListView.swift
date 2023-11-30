@@ -15,6 +15,7 @@ struct DeckListView: View {
     @State private var isSearching = false
     @State private var search = ""
     @FocusState private var searchbarFocused: Bool
+    @State private var isOptionsPresented = false
     
     private func startSearching() {
         isSearching = true
@@ -30,6 +31,9 @@ struct DeckListView: View {
     private func filterDecksFromSearch() -> [Deck] {
         decks.filter { deck in
             deck.name.lowercased().hasPrefix(search.lowercased())
+        }
+        .sorted {
+            $0.order < $1.order
         }
     } // TODO: improve search algorithm.
     
@@ -64,10 +68,11 @@ struct DeckListView: View {
             .padding(25)
             .font(.title)
             .bold()
-            .foregroundStyle(Color.accentColor)
-            .background(.background.tertiary)
+            .foregroundStyle(.white)
+            .background(Color.accentColor)
             .clipShape(Circle())
             .shadow(radius: 4, y: 4)
+            .padding()
     }
     
     private func makeDeckListOrPlaceholder() -> some View {
@@ -82,13 +87,23 @@ struct DeckListView: View {
                         .foregroundStyle(.gray)
                         .bold()
                 } else {
+                    var decks_copy = filterDecksFromSearch()
                     List {
-                        ForEach(filterDecksFromSearch()) {deck in
+                        ForEach(decks_copy) {deck in
                             DeckView(deck: deck)
                         }
+                        .onMove(perform: { indices, newOffset in
+                            decks_copy.move(fromOffsets: indices, toOffset: newOffset)
+                            for (new_order, deck) in decks_copy.enumerated() {
+                                if let index = decks.firstIndex(of: deck) {
+                                    decks[index].order = new_order
+                                }
+                            }
+                        })
                     }
-                    .scrollContentBackground(.hidden)
+                    .listRowSpacing(10)
                     .listSectionSpacing(.compact)
+                    .scrollContentBackground(.hidden)
                 }
             }
         }
@@ -105,8 +120,6 @@ struct DeckListView: View {
                         destination: DeckCustomizeView(onFinishCustomizing: .makeDeck),
                         label: makeFloatingButton
                     )
-                    .buttonStyle(.plain)
-                    .padding(.leading)
                     Spacer()
                 }
             }

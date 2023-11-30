@@ -7,26 +7,22 @@
 
 import SwiftUI
 
-struct DeckImageOverlay: View {
+struct DeckOverlayView: View {
     public let colorIndex: Int
     public let imageData: Data?
     
     var body: some View {
-        Rectangle()
-            .hidden()
-            .overlay {
-                ZStack {
-                    DECK_COLORS[colorIndex]
-                    if let imageData, let uiImage = UIImage(data: imageData) {
-                        Image(uiImage: uiImage)
-                            .resizable()
-                            .scaledToFill()
-                            .grayscale(DECK_COLORS[colorIndex] == .clear ? 0 : 1)
-                            .opacity(DECK_COLORS[colorIndex] == .clear ? 1: 0.3)
-                        // isColorClear(index) exists as a method of DeckCustomizeView but refactoring this out is a little unnecessary for now.
-                    }
-                }
+        ZStack {
+            DECK_COLORS[colorIndex]
+            if let imageData, let uiImage = UIImage(data: imageData) {
+                Image(uiImage: uiImage)
+                    .resizable()
+                    .scaledToFill()
+                    .grayscale(DECK_COLORS[colorIndex] == .clear ? 0 : 1)
+                    .opacity(DECK_COLORS[colorIndex] == .clear ? 1: 0.3)
+                // isColorClear(index) exists as a method of DeckCustomizeView but refactoring this out is a little unnecessary for now.
             }
+        }
     }
 }
 
@@ -45,7 +41,7 @@ struct DeckView: View {
     
     var body: some View {
         let nameOverlay = Rectangle()
-            .foregroundStyle(.background.opacity(0.8))
+            .foregroundStyle(.background.secondary)
             .overlay {
                 HStack {
                     Spacer()
@@ -64,22 +60,19 @@ struct DeckView: View {
                 .foregroundStyle(.white)
                 .padding(.trailing)
         }
-        .shadow(radius: 4, y: 4)
         .padding(.top)
         
-        Section {
-            VStack {
-                cardsDueOverlay
-                
-                nameOverlay
-                    .padding(.top, 50)
-            }
-            .listRowBackground(DeckImageOverlay(colorIndex: deck.colorIndex, imageData: deck.image))
-            .background(
-                NavigationLink("", value: deck)
-                    .opacity(0)
-            )
+        VStack {
+            cardsDueOverlay
+            
+            nameOverlay
+                .padding(.top, 50)
         }
+        .listRowBackground(DeckOverlayView(colorIndex: deck.colorIndex, imageData: deck.image))
+        .background(
+            NavigationLink("", value: deck)
+                .opacity(0)
+        )
         .frame(height: 150)
         .listRowInsets(EdgeInsets())
         .swipeActions(allowsFullSwipe: false) {
