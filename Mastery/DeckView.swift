@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct DeckOverlayView: View {
     public let colorIndex: Int
@@ -20,7 +21,7 @@ struct DeckOverlayView: View {
                     .scaledToFill()
                     .grayscale(DECK_COLORS[colorIndex] == .clear ? 0 : 1)
                     .opacity(DECK_COLORS[colorIndex] == .clear ? 1: 0.3)
-                // isColorClear(index) exists as a method of DeckCustomizeView but refactoring this out is a little unnecessary for now.
+                // TODO: isColorClear(index) exists as a method of DeckCustomizeView but refactoring this out is a little unnecessary for now.
             }
         }
     }
@@ -28,8 +29,10 @@ struct DeckOverlayView: View {
 
 struct DeckView: View {
     public var deck: Deck
+    
     @Environment(\.modelContext) var modelContext
-    @State private var isDeckDeleteAlertPresented = false
+    @State private var isDeleteAlertPresented = false
+    @Query private let decks: [Deck]
     
     init(deck: Deck) {
         self.deck = deck
@@ -40,33 +43,46 @@ struct DeckView: View {
     }
     
     var body: some View {
+        /*
         let nameOverlay = Rectangle()
             .foregroundStyle(.background.secondary)
             .overlay {
                 HStack {
-                    Spacer()
                     Text(deck.name)
+                    Spacer()
                 }
                 .padding()
             }
         
         let cardsDueOverlay = HStack {
             Spacer()
-            
-            Image(systemName: "rectangle.portrait.on.rectangle.portrait.angled.fill")
-                .foregroundStyle(.white)
-            Text("0 Due")
-                .bold()
-                .foregroundStyle(.white)
-                .padding(.trailing)
+            ZStack {
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(.background)
+                    .frame(width: 90, height: 40)
+                HStack(spacing: 2) {
+                    Image(systemName: "rectangle.portrait.on.rectangle.portrait.angled.fill")
+                        .foregroundStyle(.primary)
+                    Text("0 Due")
+                        .bold()
+                        .foregroundStyle(.primary)
+                }
+            }
         }
-        .padding(.top)
+        .padding(5)
+         */
         
         VStack {
+            /*
             cardsDueOverlay
-            
             nameOverlay
-                .padding(.top, 50)
+                .padding(.top)
+             */
+            Spacer()
+            Text(deck.name)
+                .padding()
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(.background.secondary)
         }
         .listRowBackground(DeckOverlayView(colorIndex: deck.colorIndex, imageData: deck.image))
         .background(
@@ -77,7 +93,7 @@ struct DeckView: View {
         .listRowInsets(EdgeInsets())
         .swipeActions(allowsFullSwipe: false) {
             Button(action: {
-                isDeckDeleteAlertPresented = true
+                isDeleteAlertPresented = true
             }) {
                 Image(systemName: "trash")
                     .tint(.red)
@@ -93,10 +109,15 @@ struct DeckView: View {
                 Image(systemName: "gearshape")
             }
         }
-        .alert("Are you sure you want to delete \(deck.name)?", isPresented: $isDeckDeleteAlertPresented) {
+        .alert("Are you sure you want to delete \(deck.name)?", isPresented: $isDeleteAlertPresented) {
             Button("Delete", role: .destructive) {
                 withAnimation {
                     modelContext.delete(deck)
+                    
+                    let sortedDecks = decks.sorted {$0.order > $1.order}
+                    for (i, deck) in sortedDecks.enumerated() {
+                        deck.order = (sortedDecks.count-1) - i
+                    } // Update the orders of all of decks in relation to the deletion.
                 }
             }
         }

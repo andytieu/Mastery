@@ -17,16 +17,28 @@ let PRESET_DECK_IMAGES: [ImageResource] = [
     .math, .geometry, .biology, .chemistry, .genetics, .astronomy, .engineering, .circuits, .physics
 ]
 
-let DECK_NAME_MAX_LENGTH = 40
-
 struct StandardTextFieldStyle: TextFieldStyle {
     func _body(configuration: TextField<_Label>) -> some View {
-        configuration
-            .padding(10)
-            .overlay {
-                RoundedRectangle(cornerRadius: 8)
-                    .stroke(Color(UIColor.systemGray), lineWidth: 0.5)
-            }
+        ZStack {
+            configuration
+                .padding(10)
+                .overlay {
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(Color(uiColor: .systemGray3), lineWidth: 1)
+                }
+        }
+    }
+}
+
+struct StandardButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+        .bold()
+        .frame(height: 35)
+        .padding(.horizontal, 10)
+        .foregroundStyle(.white)
+        .background(Color.accentColor)
+        .clipShape(RoundedRectangle(cornerRadius: 10))
     }
 }
 
@@ -35,8 +47,8 @@ struct DeckCustomizeView: View {
     @State public var colorIndex: Int = 1
     @State public var imageData: Data? {
         didSet {
-            // If the user has the default color overlay and no current image then they probably don't want to see a color overlay yet.
-            if oldValue == nil && imageData != nil && colorIndex == 1 {
+            // If the user selected their first image then they probably don't want to see a color overlay yet.
+            if oldValue == nil && imageData != nil {
                 colorIndex = 0
             }
         }
@@ -148,37 +160,34 @@ struct DeckCustomizeView: View {
             }
         }
         
-        return LazyVGrid(columns: [GridItem(.adaptive(minimum: BUTTON_SIZE))], spacing: 8, content: {
-            ForEach(0..<DECK_COLORS.count, id: \.self) {i in
-                if !(image == nil && isColorClear(i)) { // Hide the clear color option when there is no image, decks must have a color or an image (or both).
-                    makeColorButton(i)
+        return ZStack {
+            RoundedRectangle(cornerRadius: 10)
+                .stroke(Color(uiColor: .systemGray3), lineWidth: 1)
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: BUTTON_SIZE))], spacing: 15, content: {
+                ForEach(0..<DECK_COLORS.count, id: \.self) {i in
+                    if !(image == nil && isColorClear(i)) { // Hide the clear color option when there is no image, decks must have a color or an image (or both).
+                        makeColorButton(i)
+                    }
                 }
-            }
-        })
+            })
+            .padding()
+        }
     }
     
     private func makeImageSelector() -> some View {
-        func makeOptionButton(text: String, image: String) -> some View {
-            Label(text, systemImage: image)
-                .bold()
-                .frame(height: 35)
-                .padding(.horizontal, 10)
-                .foregroundStyle(.white)
-                .background(Color.accentColor)
-                .clipShape(RoundedRectangle(cornerRadius: 8))
-        }
-        
-        return HStack(spacing: 10) {
+        return HStack {
             PhotosPicker(selection: $photoItem, matching: .images) {
-                makeOptionButton(text: "Your Photos", image: "camera.fill")
+                Label("Your Photos", systemImage: "camera.fill")
             }
             .onChange(of: photoItem, asyncloadPhotoToData)
+            .buttonStyle(StandardButtonStyle())
             
             Button(action: {
                 isPresetPhotosPresented = true
             }) {
-                makeOptionButton(text: "Presets", image: "photo.on.rectangle.angled")
+                Label("Presets", systemImage: "photo.on.rectangle.angled")
             }
+            .buttonStyle(StandardButtonStyle())
             
             Spacer()
             if image != nil {
@@ -221,15 +230,6 @@ struct DeckCustomizeView: View {
         .padding()
     }
     
-    func makeHeader(_ title: String) -> some View {
-        HStack {
-            Text(title)
-                .bold()
-                .font(.title3)
-            Spacer()
-        }
-    }
-    
     func makeNameTextField() -> some View {
         TextField(text: $name) {
             Text("English, Math, etc.")
@@ -239,6 +239,7 @@ struct DeckCustomizeView: View {
             nameFieldFocused = name.isEmpty
         })
         .onChange(of: name, {
+            let DECK_NAME_MAX_LENGTH = 40
             name = String(name.prefix(DECK_NAME_MAX_LENGTH))
         })
         .textFieldStyle(StandardTextFieldStyle())
@@ -258,15 +259,18 @@ struct DeckCustomizeView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
-                makeHeader("Name")
+                Text("Name")
+                    .font(.headline)
                 makeNameTextField()
                     .padding(.bottom)
                 
-                makeHeader("Color")
+                Text("Color")
+                    .font(.headline)
                 makeColorSelector()
                     .padding(.bottom)
                 
-                makeHeader("Image")
+                Text("Image")
+                    .font(.headline)
                 makeImageSelector()
                     .padding(.bottom, 4)
                 makeDeckOverlayPreview()
@@ -275,6 +279,7 @@ struct DeckCustomizeView: View {
             }
             .padding(.horizontal)
         }
+        .padding(.top)
         .navigationTitle(getNavigationTitle())
         .navigationBarTitleDisplayMode(.inline)
         .toolbar(content: makeToolbarContent)

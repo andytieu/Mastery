@@ -33,10 +33,9 @@ struct DeckListView: View {
             deck.name.lowercased().hasPrefix(search.lowercased())
         }
         .sorted {
-            $0.order < $1.order
+            $0.order > $1.order
         }
     } // TODO: improve search algorithm.
-    
     private func makeToolbarContent() -> some ToolbarContent {
         Group {
             if isSearching {
@@ -78,9 +77,11 @@ struct DeckListView: View {
     private func makeDeckListOrPlaceholder() -> some View {
         ZStack {
             if decks.isEmpty {
-                Text("Create a Deck")
+                Text("Add a Deck.")
                     .foregroundStyle(.gray)
+                    .font(.largeTitle)
                     .bold()
+                    .padding(.horizontal, 50)
             } else {
                 if filterDecksFromSearch().isEmpty {
                     Text("No Search Results")
@@ -94,37 +95,37 @@ struct DeckListView: View {
                         }
                         .onMove(perform: { indices, newOffset in
                             decks_copy.move(fromOffsets: indices, toOffset: newOffset)
-                            for (new_order, deck) in decks_copy.enumerated() {
-                                if let index = decks.firstIndex(of: deck) {
-                                    decks[index].order = new_order
-                                }
+                            for (i, deck) in decks_copy.enumerated() {
+                                deck.order = (decks_copy.count-1) - i
                             }
                         })
+                        .moveDisabled(isSearching)
                     }
-                    .listRowSpacing(10)
+                    .listRowSpacing(20)
                     .listSectionSpacing(.compact)
                     .scrollContentBackground(.hidden)
                 }
             }
         }
     }
-    
+
     var body: some View {
         NavigationStack {
-            VStack {
-                Spacer()
+            ZStack {
                 makeDeckListOrPlaceholder()
-                Spacer()
-                HStack {
-                    NavigationLink(
-                        destination: DeckCustomizeView(onFinishCustomizing: .makeDeck),
-                        label: makeFloatingButton
-                    )
+                VStack {
                     Spacer()
+                    HStack {
+                        NavigationLink(
+                            destination: DeckCustomizeView(onFinishCustomizing: .makeDeck),
+                            label: makeFloatingButton
+                        )
+                        Spacer()
+                    }
                 }
             }
             .navigationDestination(for: Deck.self) { deck in
-                Text("\(deck.name)")
+                TopicListView(deck: deck)
             }
             .navigationTitle("Decks")
             .navigationBarTitleDisplayMode(.inline)
