@@ -14,7 +14,7 @@ struct TopicAlertView: View {
     @State public var topicAlertAction: TopicAlertAction
     @State public var topicName = ""
     
-    enum TopicAlertAction: Equatable {
+    enum TopicAlertAction {
         case addTopic(to: Deck)
         case editTopic(_ topic: Topic)
     }
@@ -22,7 +22,7 @@ struct TopicAlertView: View {
     func normalizeTopicName() -> String {
         // Disabling the confirm button in the alert gives us weird behavior, so this will do for now.
         let isValidName = topicName.trimmingCharacters(in: .whitespaces).count != 0
-        return isValidName ? topicName : "Topic"
+        return isValidName ? topicName : "Cards"
     }
     
     func confirmTopicAlert() {
@@ -42,10 +42,6 @@ struct TopicAlertView: View {
     var body: some View {
         ZStack {
             TextField("Name", text: $topicName)
-                .onChange(of: topicName, {
-                    let TOPIC_NAME_MAX_LENGTH = 40
-                    topicName = String(topicName.prefix(TOPIC_NAME_MAX_LENGTH))
-                })
             
             Button("Cancel", action: {
                 switch topicAlertAction {
@@ -55,7 +51,10 @@ struct TopicAlertView: View {
                     topicName = topic.name // We can always assume that topic.name is normalized.
                 }
             })
-            Button("Confirm", action: confirmTopicAlert)
+            Button("Confirm", action: {
+                confirmTopicAlert()
+                topicName = "" // Breaks the character limit code for some reason..
+            })
         }
     }
 }
@@ -102,14 +101,9 @@ struct TopicView: View {
             }
         }
         .alert("Are you sure you want to delete? \(topic.name)", isPresented: $isDeleteAlertPresented) {
-            Button("Cancel", action: {
-                isDeleteAlertPresented = false
-            })
-            
-            Button("Delete", action: {
+            Button("Delete", role: .destructive, action: {
                 deleteTopic(topic)
             })
-            .tint(.red)
         }
         .alert("Edit \(topic.name)", isPresented: $isEditingTopic) {
             TopicAlertView(topicAlertAction: .editTopic(topic), topicName: topic.name)
@@ -160,6 +154,7 @@ struct TopicListView: View {
                             .foregroundStyle(.white)
                             .background(Color.accentColor)
                             .clipShape(RoundedRectangle(cornerRadius: 10))
+                            .shadow(radius: 4, y: 4)
                     }
                 }
                 .ignoresSafeArea(.keyboard)

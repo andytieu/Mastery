@@ -238,10 +238,10 @@ struct DeckCustomizeView: View {
         .onAppear(perform: {
             nameFieldFocused = name.isEmpty
         })
-        .onChange(of: name, {
+        .onChange(of: name) {
             let DECK_NAME_MAX_LENGTH = 40
             name = String(name.prefix(DECK_NAME_MAX_LENGTH))
-        })
+        }
         .textFieldStyle(StandardTextFieldStyle())
     }
     
