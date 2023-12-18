@@ -14,7 +14,7 @@ let DECK_COLORS: [Color] = [
 ]
 
 let PRESET_DECK_IMAGES: [ImageResource] = [
-    .math, .geometry, .biology, .chemistry, .genetics, .astronomy, .engineering, .circuits, .physics
+    .math, .geometry, .biology, .chemistry, .astronomy, .engineering, .physics, .computerEngineering
 ]
 
 struct StandardTextFieldStyle: TextFieldStyle {
@@ -43,12 +43,12 @@ struct StandardButtonStyle: ButtonStyle {
 }
 
 struct DeckCustomizeView: View {
-    @State public var name: String = ""
-    @State public var colorIndex: Int = 1
+    @State public var name = ""
+    @State public var colorIndex = 1
     @State public var imageData: Data? {
         didSet {
-            // If the user selected their first image then they probably don't want to see a color overlay yet.
-            if oldValue == nil && imageData != nil {
+            // If the user selected their first image and they are on the default color overlay then they probably don't want to see a color overlay yet.
+            if oldValue == nil && imageData != nil && colorIndex == 1 {
                 colorIndex = 0
             }
         }
@@ -210,6 +210,8 @@ struct DeckCustomizeView: View {
                     .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
                     .clipped()
                     .aspectRatio(1, contentMode: .fit)
+                    .clipShape(Circle())
+                    .shadow(radius: 4, y: 4)
             }
         }
         
@@ -223,6 +225,7 @@ struct DeckCustomizeView: View {
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))], content: {
                     ForEach(PRESET_DECK_IMAGES, id: \.self) {resource in
                         makeImageButton(resource)
+                            .padding(3)
                     }
                 })
             }

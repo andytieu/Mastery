@@ -48,6 +48,7 @@ struct DeckListView: View {
                 
                 ToolbarItem(placement: .principal) {
                     TextField("Search", text: $search)
+                        .textFieldStyle(StandardTextFieldStyle())
                         .focused($searchbarFocused)
                         .onDisappear(perform: stopSearching)
                 }
@@ -102,7 +103,6 @@ struct DeckListView: View {
                         .moveDisabled(isSearching)
                     }
                     .listRowSpacing(20)
-                    .listSectionSpacing(.compact)
                     .scrollContentBackground(.hidden)
                 }
             }
@@ -125,7 +125,7 @@ struct DeckListView: View {
                 }
             }
             .navigationDestination(for: Deck.self) { deck in
-                TopicListView(deck: deck)
+                TopicListView(deck: deck, currentTopic: deck.getRecentlyAddedTopic())
             }
             .navigationTitle("Decks")
             .navigationBarTitleDisplayMode(.inline)

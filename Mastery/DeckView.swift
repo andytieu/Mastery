@@ -20,7 +20,7 @@ struct DeckOverlayView: View {
                     .resizable()
                     .scaledToFill()
                     .grayscale(DECK_COLORS[colorIndex] == .clear ? 0 : 1)
-                    .opacity(DECK_COLORS[colorIndex] == .clear ? 1: 0.3)
+                    .opacity(DECK_COLORS[colorIndex] == .clear ? 1: 0.5)
                 // TODO: isColorClear(index) exists as a method of DeckCustomizeView but refactoring this out is a little unnecessary for now.
             }
         }
@@ -43,41 +43,7 @@ struct DeckView: View {
     }
     
     var body: some View {
-        /*
-        let nameOverlay = Rectangle()
-            .foregroundStyle(.background.secondary)
-            .overlay {
-                HStack {
-                    Text(deck.name)
-                    Spacer()
-                }
-                .padding()
-            }
-        
-        let cardsDueOverlay = HStack {
-            Spacer()
-            ZStack {
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(.background)
-                    .frame(width: 90, height: 40)
-                HStack(spacing: 2) {
-                    Image(systemName: "rectangle.portrait.on.rectangle.portrait.angled.fill")
-                        .foregroundStyle(.primary)
-                    Text("0 Due")
-                        .bold()
-                        .foregroundStyle(.primary)
-                }
-            }
-        }
-        .padding(5)
-         */
-        
         VStack {
-            /*
-            cardsDueOverlay
-            nameOverlay
-                .padding(.top)
-             */
             Spacer()
             Text(deck.name)
                 .padding()
@@ -106,7 +72,7 @@ struct DeckView: View {
                 onFinishCustomizing: .changeDeck(deck)
             )
             NavigationLink(destination: deckCustomizer) {
-                Image(systemName: "gearshape")
+                Image(systemName: "paintbrush.pointed.fill")
             }
         }
         .alert("Are you sure you want to delete \(deck.name)?", isPresented: $isDeleteAlertPresented) {
