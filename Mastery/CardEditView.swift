@@ -58,6 +58,7 @@ struct CardEditView: View {
             backText = ""
             frontImageData = nil
             backImageData = nil
+            focusedField = .front
         case .editCard(let front, let back):
             front.text = frontText
             back.text = backText
@@ -91,8 +92,10 @@ struct CardEditView: View {
     }
     
     private func isFormIncomplete() -> Bool {
-        frontText.trimmingCharacters(in: .whitespaces).count == 0
-        || backText.trimmingCharacters(in: .whitespaces).count == 0
+        !(
+            (frontImageData != nil || frontText.trimmingCharacters(in: .whitespaces).count != 0)
+            && (backImageData != nil || backText.trimmingCharacters(in: .whitespaces).count != 0)
+        )
     }
     
     private func currentTextFieldEmpty() -> Bool? {

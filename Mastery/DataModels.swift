@@ -48,10 +48,12 @@ final class Topic {
 final class Card {
     @Relationship(deleteRule: .cascade) public var front: CardSide
     @Relationship(deleteRule: .cascade) public var back: CardSide
+    public let timestamp: Date
     
     init(front: CardSide, back: CardSide) {
         self.front = front
         self.back = back
+        self.timestamp = Date.now
     }
 }
 

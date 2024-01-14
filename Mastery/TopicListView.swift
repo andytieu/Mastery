@@ -8,8 +8,6 @@
 import SwiftUI
 import SwiftData
 
-// TODO: images for cards.
-
 struct TopicSheetView: View {
     public let onFinishEditing: OnFinishEditing
     @State public var topicName = ""
@@ -150,14 +148,14 @@ struct TopicListView: View {
         HStack {
             Spacer()
             if currentTopic.cards.count > 0 {
-                Button(action: {}, label: {
+                NavigationLink(destination: StudyTopicView(cards: currentTopic.cards)) {
                     VStack(spacing: 5) {
                         Image(systemName: "rectangle.fill.on.rectangle.angled.fill")
                             .font(.title)
                         Text("Study Topic")
                             .bold()
                     }
-                })
+                }
                 Spacer()
             }
             NavigationLink(destination: CardEditView(onFinishEditing: .addCard(to: currentTopic))) {
@@ -234,7 +232,7 @@ struct TopicListView: View {
         }
         
         return List {
-            ForEach(currentTopic.cards) {card in
+            ForEach(currentTopic.cards.sorted{$0.timestamp < $1.timestamp}) {card in
                 makeCard(card)
             }
             .listRowBackground(Color(uiColor: .secondarySystemBackground))
@@ -277,7 +275,6 @@ struct TopicListView: View {
     }
 }
 
-// TODO: better testing
 #Preview("Light") {
     ContentView()
         .modelContainer(for: Deck.self, inMemory: true)

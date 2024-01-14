@@ -35,7 +35,7 @@ struct DeckListView: View {
         .sorted {
             $0.order > $1.order
         }
-    } // TODO: improve search algorithm.
+    }
     private func makeToolbarContent() -> some ToolbarContent {
         Group {
             if isSearching {

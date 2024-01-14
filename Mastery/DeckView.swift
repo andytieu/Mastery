@@ -21,7 +21,7 @@ struct DeckOverlayView: View {
                     .scaledToFill()
                     .grayscale(DECK_COLORS[colorIndex] == .clear ? 0 : 1)
                     .opacity(DECK_COLORS[colorIndex] == .clear ? 1: 0.5)
-                // TODO: isColorClear(index) exists as a method of DeckCustomizeView but refactoring this out is a little unnecessary for now.
+                // NOTE: isColorClear(index) exists as a method of DeckCustomizeView but refactoring this out is a little unnecessary for now.
             }
         }
     }
