@@ -271,7 +271,6 @@ struct TopicListView: View {
             Button("Delete", role: .destructive, action: deleteCurrentTopic)
         }
         .padding(.top)
-        .navigationTitle("Topics")
     }
 }
 

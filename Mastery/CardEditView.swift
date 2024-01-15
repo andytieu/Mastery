@@ -11,10 +11,8 @@ import PhotosUI
 func makeImageFromUIImage(uiImage: UIImage) -> some View {
     Image(uiImage: uiImage)
         .resizable()
-        .scaledToFill()
-        .frame(height: 200)
-        .clipped()
-        .contentShape(Rectangle())
+        .aspectRatio(contentMode: .fit)
+        .frame(width: 300, height: 200)
 }
 
 struct CardEditView: View {
@@ -84,29 +82,11 @@ struct CardEditView: View {
         }
     }
     
-    private func loadDataToImage(data: Data?) -> Image? {
-        guard let frontImageData, let uiImage = UIImage(data: frontImageData) else {
-            return nil
-        }
-        return Image(uiImage: uiImage)
-    }
-    
     private func isFormIncomplete() -> Bool {
         !(
             (frontImageData != nil || frontText.trimmingCharacters(in: .whitespaces).count != 0)
             && (backImageData != nil || backText.trimmingCharacters(in: .whitespaces).count != 0)
         )
-    }
-    
-    private func currentTextFieldEmpty() -> Bool? {
-        switch focusedField {
-        case .front:
-            frontText.count == 0
-        case .back:
-            backText.count == 0
-        case nil:
-            nil
-        }
     }
     
     private func makeImageSection(for field: Field?) -> some View {
