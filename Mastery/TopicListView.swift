@@ -99,20 +99,6 @@ struct TopicListView: View {
     
     private func makeTopicSelector() -> some View {
         HStack {
-            Menu { // Replace menu with sheet of list of topics that are rearrangable
-                let sortedTopics = deck.topics.sorted {$0.timestamp > $1.timestamp}
-                Picker("", selection: $currentTopic) {
-                    ForEach(sortedTopics, id: \.self) {topic in
-                        Text("\(topic.name)")
-                    }
-                }
-            } label: {
-                Text("\(currentTopic.name)")
-                    .font(.title2)
-                    .bold()
-                    .multilineTextAlignment(.leading)
-            }
-            
             Menu {
                 Button(action: {
                     isAddingTopic = true
@@ -140,6 +126,20 @@ struct TopicListView: View {
                 }
             }
             
+            Menu { // Replace menu with sheet of list of topics that are rearrangable
+                let sortedTopics = deck.topics.sorted {$0.timestamp > $1.timestamp}
+                Picker("", selection: $currentTopic) {
+                    ForEach(sortedTopics, id: \.self) {topic in
+                        Text("\(topic.name)")
+                    }
+                }
+            } label: {
+                Text("\(currentTopic.name)")
+                    .font(.title3)
+                    .bold()
+                    .multilineTextAlignment(.leading)
+            }
+            
             Spacer()
         }
     }
@@ -153,6 +153,7 @@ struct TopicListView: View {
                         Image(systemName: "rectangle.fill.on.rectangle.angled.fill")
                             .font(.title)
                         Text("Study Topic")
+                            .foregroundStyle(.appLabel)
                             .bold()
                     }
                 }
@@ -163,6 +164,7 @@ struct TopicListView: View {
                     Image(systemName: "plus.circle.fill")
                         .font(.title)
                     Text("Add Cards")
+                        .foregroundStyle(.appLabel)
                         .bold()
                 }
             }
@@ -245,7 +247,7 @@ struct TopicListView: View {
         VStack {
             VStack(alignment: .leading) {
                 Text("\(deck.name)")
-                    .font(.title)
+                    .font(.title2)
                     .bold()
                 makeTopicSelector()
                     .padding(.bottom)

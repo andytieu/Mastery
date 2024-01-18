@@ -142,6 +142,7 @@ struct CardEditView: View {
             ToolbarItem(placement: .keyboard) {
                 PhotosPicker(selection: $photoItem, matching: .images) {
                     Image(systemName: "camera.fill")
+                        .foregroundStyle(.appLabel)
                         .bold()
                 }
                 .onChange(of: photoItem, asyncloadPhotoToData)

@@ -42,13 +42,13 @@ struct DeckListView: View {
                 ToolbarItem(placement: .topBarLeading) {
                     Button(action: stopSearching) {
                         Image(systemName: "chevron.left")
+                            .foregroundStyle(.appLabel)
                             .bold()
                     }
                 }
                 
                 ToolbarItem(placement: .principal) {
                     TextField("Search", text: $search)
-                        .textFieldStyle(StandardTextFieldStyle())
                         .focused($searchbarFocused)
                         .onDisappear(perform: stopSearching)
                 }
@@ -56,6 +56,7 @@ struct DeckListView: View {
                 ToolbarItem(placement: .topBarLeading) {
                     Button(action: startSearching) {
                         Image(systemName: "magnifyingglass")
+                            .foregroundStyle(.appLabel)
                             .bold()
                     }
                 }
@@ -79,14 +80,12 @@ struct DeckListView: View {
         ZStack {
             if decks.isEmpty {
                 Text("Add a Deck.")
-                    .foregroundStyle(.gray)
-                    .font(.largeTitle)
+                    .font(.title)
                     .bold()
                     .padding(.horizontal, 50)
             } else {
                 if filterDecksFromSearch().isEmpty {
                     Text("No Search Results")
-                        .foregroundStyle(.gray)
                         .bold()
                 } else {
                     var decks_copy = filterDecksFromSearch()

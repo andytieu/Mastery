@@ -14,8 +14,10 @@ let DECK_COLORS: [Color] = [
 ]
 
 let PRESET_DECK_IMAGES: [ImageResource] = [
-    .math, .geometry, .biology, .chemistry, .astronomy, .engineering, .physics, .computerEngineering
+    .math, .geometry, .biology, .chemistry, .astronomy, .engineering, .physics, .computerEngineering, .history
 ]
+
+let DECK_NAME_LIMIT = 40
 
 struct StandardTextFieldStyle: TextFieldStyle {
     func _body(configuration: TextField<_Label>) -> some View {
@@ -36,8 +38,8 @@ struct StandardButtonStyle: ButtonStyle {
         .bold()
         .frame(height: 35)
         .padding(.horizontal, 10)
-        .foregroundStyle(.white)
-        .background(Color.accentColor)
+        .foregroundStyle(.primary)
+        .background(Color(uiColor: .appBackground2))
         .clipShape(RoundedRectangle(cornerRadius: 10))
     }
 }
@@ -113,7 +115,7 @@ struct DeckCustomizeView: View {
     private func getNavigationTitle() -> String {
         switch onFinishCustomizing {
         case .makeDeck:
-            "Create Deck"
+            "Create Your Deck"
         case .changeDeck(let deck):
             deck.name
         }
@@ -175,7 +177,7 @@ struct DeckCustomizeView: View {
     }
     
     private func makeImageSelector() -> some View {
-        return HStack {
+        return HStack(spacing: 12) {
             PhotosPicker(selection: $photoItem, matching: .images) {
                 Label("Your Photos", systemImage: "camera.fill")
             }
@@ -193,6 +195,7 @@ struct DeckCustomizeView: View {
             if image != nil {
                 Button(action: clearImage) {
                     Image(systemName: "trash")
+                        .foregroundStyle(.appLabel)
                         .font(.title2)
                 }
             }
@@ -210,22 +213,24 @@ struct DeckCustomizeView: View {
                     .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
                     .clipped()
                     .aspectRatio(1, contentMode: .fit)
-                    .clipShape(Circle())
-                    .shadow(radius: 4, y: 4)
             }
         }
         
         return VStack(alignment: .leading) {
-            Button("Cancel", action: {
+            Button(action: {
                 isPresetPhotosPresented = false
-            })
+            }) {
+                Image(systemName: "chevron.left")
+                    .foregroundStyle(.appLabel)
+                    .font(.title3)
+                    .bold()
+            }
             .padding(.bottom, 8)
             
             ScrollView {
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))], content: {
                     ForEach(PRESET_DECK_IMAGES, id: \.self) {resource in
                         makeImageButton(resource)
-                            .padding(3)
                     }
                 })
             }
@@ -242,19 +247,29 @@ struct DeckCustomizeView: View {
             nameFieldFocused = name.isEmpty
         })
         .onChange(of: name) {
-            let DECK_NAME_MAX_LENGTH = 40
-            name = String(name.prefix(DECK_NAME_MAX_LENGTH))
+            name = String(name.prefix(DECK_NAME_LIMIT))
         }
         .textFieldStyle(StandardTextFieldStyle())
     }
     
-    func makeDeckOverlayPreview() -> some View {
-        ZStack {
+    func previewDeckOverlay() -> some View {
+        Group {
             if image != nil {
                 DeckOverlayView(colorIndex: colorIndex, imageData: imageData)
                     .frame(height: 200)
-                    .clipped()
-                    .contentShape(Rectangle())
+                    .clipShape(RoundedRectangle(cornerRadius: 8)) // Clip the image.
+                    .contentShape(Rectangle()) // Clip the hitbox.
+            }
+        }
+    }
+    
+    func displayNameLimitWarning() -> some View {
+        let charsLeft = DECK_NAME_LIMIT - name.count
+        let CHAR_LIMIT_WARNING = 5
+        return Group {
+            if charsLeft <= CHAR_LIMIT_WARNING {
+                Text("\(DECK_NAME_LIMIT - name.count) Left")
+                    .foregroundStyle(charsLeft == 0 ? .red : .appLabel)
             }
         }
     }
@@ -262,8 +277,12 @@ struct DeckCustomizeView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
-                Text("Name")
-                    .font(.headline)
+                HStack {
+                    Text("Name")
+                        .font(.headline)
+                    Spacer()
+                    displayNameLimitWarning()
+                }
                 makeNameTextField()
                     .padding(.bottom)
                 
@@ -276,7 +295,7 @@ struct DeckCustomizeView: View {
                     .font(.headline)
                 makeImageSelector()
                     .padding(.bottom, 4)
-                makeDeckOverlayPreview()
+                previewDeckOverlay()
                 
                 Spacer()
             }
