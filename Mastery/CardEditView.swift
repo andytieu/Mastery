@@ -11,8 +11,8 @@ import PhotosUI
 func makeImageFromUIImage(uiImage: UIImage) -> some View {
     Image(uiImage: uiImage)
         .resizable()
-        .aspectRatio(contentMode: .fit)
-        .frame(width: 300, height: 200)
+        .scaledToFit()
+        .frame(maxHeight: 300, alignment: .top)
 }
 
 struct CardEditView: View {
@@ -107,6 +107,7 @@ struct CardEditView: View {
                 })
                 
                 makeImageFromUIImage(uiImage: uiImage)
+                    .border(.appBackground2)
             }
         }
     }

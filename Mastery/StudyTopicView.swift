@@ -33,7 +33,7 @@ struct CardView: View {
         }) {
             VStack {
                 Spacer()
-                VStack(alignment: side == .front ? .leading : .trailing) {
+                VStack(alignment: .center) {
                     Text(sideData.text)
                         .frame(maxWidth: .infinity)
                         .foregroundStyle(Color(uiColor: .label))
