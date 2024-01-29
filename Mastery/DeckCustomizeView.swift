@@ -220,7 +220,7 @@ struct DeckCustomizeView: View {
             Button(action: {
                 isPresetPhotosPresented = false
             }) {
-                Image(systemName: "chevron.left")
+                Image(systemName: "arrow.left")
                     .foregroundStyle(.appLabel)
                     .font(.title3)
                     .bold()
@@ -252,7 +252,7 @@ struct DeckCustomizeView: View {
         .textFieldStyle(StandardTextFieldStyle())
     }
     
-    func previewDeckOverlay() -> some View {
+    func makeDeckOverlay() -> some View {
         Group {
             if image != nil {
                 DeckOverlayView(colorIndex: colorIndex, imageData: imageData)
@@ -295,7 +295,7 @@ struct DeckCustomizeView: View {
                     .font(.headline)
                 makeImageSelector()
                     .padding(.bottom, 4)
-                previewDeckOverlay()
+                makeDeckOverlay()
                 
                 Spacer()
             }

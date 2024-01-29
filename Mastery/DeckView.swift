@@ -91,12 +91,12 @@ struct DeckView: View {
 }
 
 #Preview("Light") {
-    ContentView()
-        .modelContainer(for: Deck.self, inMemory: true)
+    DeckListView()
+        .modelContainer(PreviewHandler.previewContainer)
 }
 
 #Preview("Dark") {
-    ContentView()
-        .modelContainer(for: Deck.self, inMemory: true)
+    DeckListView()
         .preferredColorScheme(.dark)
+        .modelContainer(PreviewHandler.previewContainer)
 }

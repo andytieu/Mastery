@@ -11,7 +11,6 @@
 		21246D7E2B191355004A78FD /* TopicListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21246D7D2B191355004A78FD /* TopicListView.swift */; };
 		21C8690A2B411DCB006CDDC4 /* StudyTopicView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C869092B411DCB006CDDC4 /* StudyTopicView.swift */; };
 		21E528592B0AE82E006BFB1B /* MasteryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E528582B0AE82E006BFB1B /* MasteryApp.swift */; };
-		21E5285B2B0AE82E006BFB1B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E5285A2B0AE82E006BFB1B /* ContentView.swift */; };
 		21E5285F2B0AE82F006BFB1B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 21E5285E2B0AE82F006BFB1B /* Assets.xcassets */; };
 		21E528622B0AE82F006BFB1B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 21E528612B0AE82F006BFB1B /* Preview Assets.xcassets */; };
 		21E528692B0AE920006BFB1B /* DeckListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E528682B0AE920006BFB1B /* DeckListView.swift */; };
@@ -26,7 +25,6 @@
 		21C869092B411DCB006CDDC4 /* StudyTopicView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyTopicView.swift; sourceTree = "<group>"; };
 		21E528552B0AE82E006BFB1B /* Mastery.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mastery.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		21E528582B0AE82E006BFB1B /* MasteryApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasteryApp.swift; sourceTree = "<group>"; };
-		21E5285A2B0AE82E006BFB1B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		21E5285E2B0AE82F006BFB1B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		21E528612B0AE82F006BFB1B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		21E528682B0AE920006BFB1B /* DeckListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckListView.swift; sourceTree = "<group>"; };
@@ -67,7 +65,6 @@
 			children = (
 				21E5286E2B0D2FAA006BFB1B /* DataModels.swift */,
 				21E528582B0AE82E006BFB1B /* MasteryApp.swift */,
-				21E5285A2B0AE82E006BFB1B /* ContentView.swift */,
 				21E5285E2B0AE82F006BFB1B /* Assets.xcassets */,
 				21E528602B0AE82F006BFB1B /* Preview Content */,
 				21E528682B0AE920006BFB1B /* DeckListView.swift */,
@@ -161,7 +158,6 @@
 				210E1CDC2B21C89A00AAC945 /* CardEditView.swift in Sources */,
 				21E5286F2B0D2FAA006BFB1B /* DataModels.swift in Sources */,
 				21E528692B0AE920006BFB1B /* DeckListView.swift in Sources */,
-				21E5285B2B0AE82E006BFB1B /* ContentView.swift in Sources */,
 				21E528592B0AE82E006BFB1B /* MasteryApp.swift in Sources */,
 				21C8690A2B411DCB006CDDC4 /* StudyTopicView.swift in Sources */,
 				21E5286D2B0D2F8B006BFB1B /* DeckCustomizeView.swift in Sources */,

@@ -277,12 +277,12 @@ struct TopicListView: View {
 }
 
 #Preview("Light") {
-    ContentView()
-        .modelContainer(for: Deck.self, inMemory: true)
+    DeckListView()
+        .modelContainer(PreviewHandler.previewContainer)
 }
 
 #Preview("Dark") {
-    ContentView()
+    DeckListView()
         .preferredColorScheme(.dark)
-        .modelContainer(for: Deck.self, inMemory: true)
+        .modelContainer(PreviewHandler.previewContainer)
 }

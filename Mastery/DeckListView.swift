@@ -36,12 +36,13 @@ struct DeckListView: View {
             $0.order > $1.order
         }
     }
+    
     private func makeToolbarContent() -> some ToolbarContent {
         Group {
             if isSearching {
                 ToolbarItem(placement: .topBarLeading) {
                     Button(action: stopSearching) {
-                        Image(systemName: "chevron.left")
+                        Image(systemName: "arrow.left")
                             .foregroundStyle(.appLabel)
                             .bold()
                     }
@@ -134,13 +135,31 @@ struct DeckListView: View {
     }
 }
 
+@MainActor
+class PreviewHandler {
+    static let previewContainer: ModelContainer = {
+        do {
+            let config = ModelConfiguration(isStoredInMemoryOnly: true)
+            let container = try ModelContainer(for: Deck.self, configurations: config)
+            
+            let modelDeck = Deck(name: "Astronomy", colorIndex: 0, image: UIImage(resource: .astronomy).pngData(), order: 0)
+            
+            container.mainContext.insert(modelDeck)
+            
+            return container
+        } catch {
+            fatalError("Failed to create model container for previewing: \(error.localizedDescription)")
+        }
+    }()
+}
+
 #Preview("Light") {
-    ContentView()
-        .modelContainer(for: Deck.self, inMemory: true)
+    return DeckListView()
+        .modelContainer(PreviewHandler.previewContainer)
 }
 
 #Preview("Dark") {
-    ContentView()
+    return DeckListView()
         .preferredColorScheme(.dark)
-        .modelContainer(for: Deck.self, inMemory: true)
+        .modelContainer(PreviewHandler.previewContainer)
 }

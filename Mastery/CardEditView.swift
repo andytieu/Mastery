@@ -25,8 +25,7 @@ struct CardEditView: View {
     @State private var photoItem: PhotosPickerItem?
     @Environment(\.dismiss) private var dismiss
     @FocusState private var focusedField: Field?
-    
-    
+
     enum OnFinishEditing {
         case addCard(to: Topic)
         case editCard(front: CardSide, back: CardSide)
@@ -112,47 +111,55 @@ struct CardEditView: View {
         }
     }
     
-    var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 8) {
-                Text("Front Side")
-                    .font(.headline)
-                makeImageSection(for: .front)
-                TextField("Front Text", text: $frontText, axis: .vertical)
-                    .focused($focusedField, equals: .front)
-                    .textFieldStyle(StandardTextFieldStyle())
-                    .padding(.bottom)
-                
-                Text("Back Side")
-                    .font(.headline)
-                makeImageSection(for: .back)
-                TextField("Back Text", text: $backText, axis: .vertical)
-                    .focused($focusedField, equals: .back)
-                    .textFieldStyle(StandardTextFieldStyle())
-            }
-            .padding()
-        }
-        .toolbar {
+    private func makeNavigationBar() -> some ToolbarContent {
+        ToolbarItem(placement: .navigation) {
             Button(action: confirmEdits) {
                 Text("Done")
                     .bold()
             }
             .disabled(isFormIncomplete())
         }
-        .toolbar {
-            ToolbarItem(placement: .keyboard) {
-                PhotosPicker(selection: $photoItem, matching: .images) {
-                    Image(systemName: "camera.fill")
-                        .foregroundStyle(.appLabel)
-                        .bold()
-                }
-                .onChange(of: photoItem, asyncloadPhotoToData)
+    }
+    
+    private func makeKeyboardBar() -> some ToolbarContent {
+        ToolbarItem(placement: .keyboard) {
+            PhotosPicker(selection: $photoItem, matching: .images) {
+                Image(systemName: "camera.fill")
+                    .foregroundStyle(.appLabel)
+                    .bold()
             }
+            .onChange(of: photoItem, asyncloadPhotoToData)
         }
-        .onAppear {
-            focusedField = .front
+    }
+    
+    var body: some View {
+        VStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Front Side")
+                        .font(.headline)
+                    makeImageSection(for: .front)
+                    TextField("Front Text", text: $frontText, axis: .vertical)
+                        .focused($focusedField, equals: .front)
+                        .textFieldStyle(StandardTextFieldStyle())
+                        .padding(.bottom)
+                    
+                    Text("Back Side")
+                        .font(.headline)
+                    makeImageSection(for: .back)
+                    TextField("Back Text", text: $backText, axis: .vertical)
+                        .focused($focusedField, equals: .back)
+                        .textFieldStyle(StandardTextFieldStyle())
+                }
+                .padding()
+            }
+            .toolbar(content: makeNavigationBar)
+            .toolbar(content: makeKeyboardBar)
+            .onAppear {
+                focusedField = .front
+            }
+            .navigationTitle(onFinishEditing.getTitle())
+            .toolbarTitleDisplayMode(.inline)
         }
-        .navigationTitle(onFinishEditing.getTitle())
-        .toolbarTitleDisplayMode(.inline)
     }
 }
