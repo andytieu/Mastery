@@ -176,7 +176,6 @@ struct TopicListView: View {
     @State private var isShowingCardSelectionDialog = false
     @State private var isShowingMoveCardSheet = false
     @State private var selectedCards = [Card]()
-    @Query private var decks: [Deck]
     
     func deleteCurrentTopic() {
         if let index = deck.topics.firstIndex(where: {$0.id == currentTopic.id}) {

@@ -33,14 +33,13 @@ final class Deck {
 @Model
 final class Topic {
     public var name: String
-    public let timestamp: Date
+    public let timestamp = Date.now
     
     @Relationship(deleteRule: .cascade) public var cards = [Card]()
     
     init(name: String, cards: [Card] = []) {
         self.name = name
         self.cards = cards
-        self.timestamp = Date.now
     }
 }
 
@@ -48,12 +47,11 @@ final class Topic {
 final class Card {
     @Relationship(deleteRule: .cascade) public var front: CardSide
     @Relationship(deleteRule: .cascade) public var back: CardSide
-    public let timestamp: Date
+    public let timestamp = Date.now
     
     init(front: CardSide, back: CardSide) {
         self.front = front
         self.back = back
-        self.timestamp = Date.now
     }
 }
 
