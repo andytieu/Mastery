@@ -17,32 +17,7 @@ let PRESET_DECK_IMAGES: [ImageResource] = [
     .math, .geometry, .biology, .chemistry, .astronomy, .engineering, .physics, .computerEngineering, .history
 ]
 
-let DECK_NAME_LIMIT = 40
-
-struct StandardTextFieldStyle: TextFieldStyle {
-    func _body(configuration: TextField<_Label>) -> some View {
-        ZStack {
-            configuration
-                .padding(10)
-                .overlay {
-                    RoundedRectangle(cornerRadius: 10)
-                        .stroke(Color(uiColor: .systemGray3), lineWidth: 1)
-                }
-        }
-    }
-}
-
-struct StandardButtonStyle: ButtonStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-        .bold()
-        .frame(height: 35)
-        .padding(.horizontal, 10)
-        .foregroundStyle(.primary)
-        .background(Color(uiColor: .appBackground2))
-        .clipShape(RoundedRectangle(cornerRadius: 10))
-    }
-}
+private let DECK_NAME_LIMIT = 40
 
 struct DeckCustomizeView: View {
     @State public var name = ""
@@ -239,17 +214,18 @@ struct DeckCustomizeView: View {
     }
     
     func makeNameTextField() -> some View {
-        TextField(text: $name) {
-            Text("English, Math, etc.")
-        }
-        .focused($nameFieldFocused)
-        .onAppear(perform: {
-            nameFieldFocused = name.isEmpty
-        })
-        .onChange(of: name) {
-            name = String(name.prefix(DECK_NAME_LIMIT))
-        }
-        .textFieldStyle(StandardTextFieldStyle())
+        let textField = TextField("English, Math, etc.", text: $name)
+            .focused($nameFieldFocused)
+            .onAppear {
+                nameFieldFocused = name.isEmpty
+            }
+        
+        return StandardTextField(
+            textField: textField,
+            fieldText: $name,
+            labelText: "Name",
+            charLimit: DECK_NAME_LIMIT
+        )
     }
     
     func makeDeckOverlay() -> some View {
@@ -277,14 +253,9 @@ struct DeckCustomizeView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
-                HStack {
-                    Text("Name")
-                        .font(.headline)
-                    Spacer()
-                    displayNameLimitWarning()
-                }
+
                 makeNameTextField()
-                    .padding(.bottom)
+                    .padding([.bottom, .top])
                 
                 Text("Color")
                     .font(.headline)
@@ -301,7 +272,6 @@ struct DeckCustomizeView: View {
             }
             .padding(.horizontal)
         }
-        .padding(.top)
         .navigationTitle(getNavigationTitle())
         .navigationBarTitleDisplayMode(.inline)
         .toolbar(content: makeToolbarContent)
