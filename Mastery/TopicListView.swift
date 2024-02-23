@@ -84,7 +84,18 @@ struct CardMoveView: View {
     @State public var selectedTopic: Topic
     public let cards: [Card]
     @Binding public var isShowingMoveCardSheet: Bool
+    
     @Query var decks: [Deck]
+    private let topicContainingCards: Topic
+    @Environment(\.dismiss) var dismiss
+    
+    init(selectedDeck: Deck, selectedTopic: Topic, cards: [Card], isShowingMoveCardSheet: Binding<Bool>) {
+        _selectedDeck = State(initialValue: selectedDeck)
+        _selectedTopic = State(initialValue: selectedTopic)
+        _isShowingMoveCardSheet = isShowingMoveCardSheet
+        self.cards = cards
+        self.topicContainingCards = selectedTopic // Store the topic that holds the cards
+    }
     
     func getMenuLabel(_ text: String) -> some View {
         Button(action: {}) { // we're using an action-less button so we can apply a button style.
@@ -96,6 +107,16 @@ struct CardMoveView: View {
         }
         .buttonStyle(StandardButtonStyle())
         .padding(.bottom)
+    }
+    
+    func moveCards() {
+        topicContainingCards.cards.removeAll { card1 in
+            cards.contains { card2 in
+                card1.id == card2.id
+            }
+        }
+        
+        selectedTopic.cards.append(contentsOf: cards)
     }
     
     var body: some View {
@@ -129,7 +150,7 @@ struct CardMoveView: View {
                     }
                 }
                 .onChange(of: selectedDeck) {
-                    selectedTopic = selectedDeck.topics[0] // TODO: implement safe index just to make sure.
+                    selectedTopic = selectedDeck.topics[0] // Safe to assume atleast 1 topic exists for each deck.
                 }
             } label: {
                 getMenuLabel(selectedDeck.name)
@@ -150,7 +171,10 @@ struct CardMoveView: View {
             }
 
             Spacer()
-            Button(action: {}, label: {
+            Button(action: {
+                moveCards()
+                dismiss()
+            }) {
                 Text("Confirm")
                     .font(.headline)
                     .frame(maxWidth: .infinity)
@@ -158,7 +182,7 @@ struct CardMoveView: View {
                     .background(.blue)
                     .foregroundStyle(.white)
                     .clipShape(RoundedRectangle(cornerRadius: 12))
-            })
+            }
         }
         .padding()
     }
