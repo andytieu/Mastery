@@ -82,18 +82,18 @@ struct TopicSheetView: View {
 struct CardMoveView: View {
     @State public var selectedDeck: Deck
     @State public var selectedTopic: Topic
-    public let cards: [Card]
+    @Binding public var cards: [Card]
     @Binding public var isShowingMoveCardSheet: Bool
     
     @Query var decks: [Deck]
     private let topicContainingCards: Topic
     @Environment(\.dismiss) var dismiss
     
-    init(selectedDeck: Deck, selectedTopic: Topic, cards: [Card], isShowingMoveCardSheet: Binding<Bool>) {
+    init(selectedDeck: Deck, selectedTopic: Topic, cards: Binding<[Card]>, isShowingMoveCardSheet: Binding<Bool>) {
         _selectedDeck = State(initialValue: selectedDeck)
         _selectedTopic = State(initialValue: selectedTopic)
         _isShowingMoveCardSheet = isShowingMoveCardSheet
-        self.cards = cards
+        _cards = cards
         self.topicContainingCards = selectedTopic // Store the topic that holds the cards
     }
     
@@ -145,7 +145,7 @@ struct CardMoveView: View {
                 .bold()
             Menu {
                 Picker("", selection: $selectedDeck) {
-                    ForEach(decks, id: \.self) {deck in
+                    ForEach(decks.sorted {$0.order > $1.order}, id: \.self) {deck in
                         Text("\(deck.name)")
                     }
                 }
@@ -162,7 +162,7 @@ struct CardMoveView: View {
                 .bold()
             Menu {
                 Picker("", selection: $selectedTopic) {
-                    ForEach(selectedDeck.topics, id: \.self) {topic in
+                    ForEach(selectedDeck.topics.sorted {$0.timestamp > $1.timestamp}, id: \.self) {topic in
                         Text("\(topic.name)")
                     }
                 }
@@ -174,6 +174,7 @@ struct CardMoveView: View {
             Button(action: {
                 moveCards()
                 dismiss()
+                cards.removeAll()
             }) {
                 Text("Confirm")
                     .font(.headline)
@@ -190,7 +191,11 @@ struct CardMoveView: View {
 
 struct TopicListView: View {
     public var deck: Deck
-    @State public var currentTopic: Topic
+    @State public var currentTopic: Topic {
+        didSet {
+            selectedCards.removeAll()
+        }
+    }
     
     @State private var isAddingTopic = false
     @State private var isEditingTopic = false
@@ -244,9 +249,6 @@ struct TopicListView: View {
                     ForEach(sortedTopics, id: \.self) {topic in
                         Text("\(topic.name)")
                     }
-                }
-                .onChange(of: currentTopic) {
-                    selectedCards.removeAll()
                 }
             } label: {
                 Text("\(currentTopic.name)")
@@ -417,11 +419,11 @@ struct TopicListView: View {
             )
         }
         .sheet(isPresented: $isShowingMoveCardSheet) {
-            // We pass a copy of the selected cards so we can clear the actual array of selected cards to update the card list view.
+            // We pass cards as a binding so the CardMoveView can unselect the cards upon moving them.
             CardMoveView(
                 selectedDeck: deck,
                 selectedTopic: currentTopic,
-                cards: selectedCards,
+                cards: $selectedCards,
                 isShowingMoveCardSheet: $isShowingMoveCardSheet
             )
         }
