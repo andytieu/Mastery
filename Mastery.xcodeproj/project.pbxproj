@@ -11,6 +11,7 @@
 		211786422B6DE1F7003C6FCD /* StandardTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211786412B6DE1F7003C6FCD /* StandardTextField.swift */; };
 		21246D7E2B191355004A78FD /* TopicListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21246D7D2B191355004A78FD /* TopicListView.swift */; };
 		214231DE2B6C398F003EE922 /* ViewStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214231DD2B6C398F003EE922 /* ViewStyles.swift */; };
+		218E2CAD2B8959A100521A88 /* CardMoveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218E2CAC2B8959A100521A88 /* CardMoveView.swift */; };
 		21C8690A2B411DCB006CDDC4 /* StudyTopicView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C869092B411DCB006CDDC4 /* StudyTopicView.swift */; };
 		21E528592B0AE82E006BFB1B /* MasteryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E528582B0AE82E006BFB1B /* MasteryApp.swift */; };
 		21E5285F2B0AE82F006BFB1B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 21E5285E2B0AE82F006BFB1B /* Assets.xcassets */; };
@@ -26,6 +27,7 @@
 		211786412B6DE1F7003C6FCD /* StandardTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardTextField.swift; sourceTree = "<group>"; };
 		21246D7D2B191355004A78FD /* TopicListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopicListView.swift; sourceTree = "<group>"; };
 		214231DD2B6C398F003EE922 /* ViewStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewStyles.swift; sourceTree = "<group>"; };
+		218E2CAC2B8959A100521A88 /* CardMoveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardMoveView.swift; sourceTree = "<group>"; };
 		21C869092B411DCB006CDDC4 /* StudyTopicView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyTopicView.swift; sourceTree = "<group>"; };
 		21E528552B0AE82E006BFB1B /* Mastery.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mastery.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		21E528582B0AE82E006BFB1B /* MasteryApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasteryApp.swift; sourceTree = "<group>"; };
@@ -79,6 +81,7 @@
 				21C869092B411DCB006CDDC4 /* StudyTopicView.swift */,
 				214231DD2B6C398F003EE922 /* ViewStyles.swift */,
 				211786412B6DE1F7003C6FCD /* StandardTextField.swift */,
+				218E2CAC2B8959A100521A88 /* CardMoveView.swift */,
 			);
 			path = Mastery;
 			sourceTree = "<group>";
@@ -164,6 +167,7 @@
 				214231DE2B6C398F003EE922 /* ViewStyles.swift in Sources */,
 				210E1CDC2B21C89A00AAC945 /* CardEditView.swift in Sources */,
 				21E5286F2B0D2FAA006BFB1B /* DataModels.swift in Sources */,
+				218E2CAD2B8959A100521A88 /* CardMoveView.swift in Sources */,
 				21E528692B0AE920006BFB1B /* DeckListView.swift in Sources */,
 				21E528592B0AE82E006BFB1B /* MasteryApp.swift in Sources */,
 				21C8690A2B411DCB006CDDC4 /* StudyTopicView.swift in Sources */,
