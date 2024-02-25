@@ -31,6 +31,8 @@ struct StandardTextField<Field: View>: View {
     private let charLimitWarning: Int // How many characters remaining until the user is warned about the character limit.
     private let clearTextButtonEnabled: Bool
     
+    @FocusState private var isFocused
+    
     init(
         textField: Field,
         fieldText: Binding<String>,
@@ -45,11 +47,13 @@ struct StandardTextField<Field: View>: View {
         self.charLimit = charLimit
         self.charLimitWarning = charLimitWarning
         self.clearTextButtonEnabled = clearTextButtonEnabled
+        self.isFocused = false
     }
     
     private func makeClearTextButton() -> some View {
         Button(action: {
             fieldText.removeAll()
+            isFocused = true
         }) {
             Image(systemName: "xmark")
                 .foregroundStyle(.appLabel)
@@ -87,6 +91,7 @@ struct StandardTextField<Field: View>: View {
             HStack {
                 textField
                     .onChange(of: fieldText, limitCharCount)
+                    .focused($isFocused)
                 if clearTextButtonEnabled {
                     if fieldText.count > 0 {
                         makeClearTextButton()
