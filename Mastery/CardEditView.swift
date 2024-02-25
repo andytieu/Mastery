@@ -151,7 +151,8 @@ struct CardEditView: View {
                         textField: 
                             TextField("Front Text", text: $frontText, axis: .vertical)
                             .focused($focusedField, equals: .front),
-                        fieldText: $frontText
+                        fieldText: $frontText,
+                        clearTextButtonEnabled: false
                     )
                     .padding(.bottom)
                     
@@ -161,7 +162,8 @@ struct CardEditView: View {
                         textField:
                             TextField("Back Text", text: $backText, axis: .vertical)
                                 .focused($focusedField, equals: .back),
-                        fieldText: $backText
+                        fieldText: $backText,
+                        clearTextButtonEnabled: false
                     )
                     .padding(.bottom)
                 }

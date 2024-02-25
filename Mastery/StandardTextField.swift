@@ -29,19 +29,22 @@ struct StandardTextField<Field: View>: View {
     private let labelText: String?
     private let charLimit: Int?
     private let charLimitWarning: Int // How many characters remaining until the user is warned about the character limit.
+    private let clearTextButtonEnabled: Bool
     
     init(
         textField: Field,
         fieldText: Binding<String>,
         labelText: String? = nil,
         charLimit: Int? = nil,
-        charLimitWarning: Int = DEFAULT_CHAR_LIMIT_WARNING
+        charLimitWarning: Int = DEFAULT_CHAR_LIMIT_WARNING,
+        clearTextButtonEnabled: Bool = true
     ) {
         self.textField = textField
         self._fieldText = fieldText
         self.labelText = labelText
         self.charLimit = charLimit
         self.charLimitWarning = charLimitWarning
+        self.clearTextButtonEnabled = clearTextButtonEnabled
     }
     
     private func makeClearTextButton() -> some View {
@@ -84,8 +87,10 @@ struct StandardTextField<Field: View>: View {
             HStack {
                 textField
                     .onChange(of: fieldText, limitCharCount)
-                if fieldText.count > 0 {
-                    makeClearTextButton()
+                if clearTextButtonEnabled {
+                    if fieldText.count > 0 {
+                        makeClearTextButton()
+                    }
                 }
             }
             .padding(10)
