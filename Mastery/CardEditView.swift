@@ -88,25 +88,34 @@ struct CardEditView: View {
         )
     }
     
-    private func makeImageSection(for field: Field?) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            if 
-                let field,
-                let data = field == .front ? frontImageData : backImageData,
-                let uiImage = UIImage(data: data) 
-            {
+    @ViewBuilder
+    private func makeImageSection(for field: Field) -> some View {
+        if
+            let data = (field == .front ? frontImageData : backImageData),
+            let uiImage = UIImage(data: data)
+        {
+            makeImageFromUIImage(uiImage: uiImage)
+                .border(.appBackground2)
+        }
+    }
+    
+    @ViewBuilder
+    private func makeFieldHeader(for field: Field) -> some View {
+        HStack {
+            Text("\(field == .front ? "Front" : "Back") Side")
+                .font(.headline)
+            Spacer()
+            if  ((field == .front) && frontImageData != nil) || ((field == .back) && backImageData != nil) {
                 Button(action: {
-                    if field == .front {
+                    switch field {
+                    case .front:
                         frontImageData = nil
-                    } else {
+                    case .back:
                         backImageData = nil
                     }
-                }, label: {
+                }) {
                     Image(systemName: "trash")
-                })
-                
-                makeImageFromUIImage(uiImage: uiImage)
-                    .border(.appBackground2)
+                }
             }
         }
     }
@@ -135,21 +144,26 @@ struct CardEditView: View {
     var body: some View {
         VStack {
             ScrollView {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Front Side")
-                        .font(.headline)
+                VStack(alignment: .leading) {
+                    makeFieldHeader(for: .front)
                     makeImageSection(for: .front)
-                    TextField("Front Text", text: $frontText, axis: .vertical)
-                        .focused($focusedField, equals: .front)
-                        .textFieldStyle(StandardTextFieldStyle())
-                        .padding(.bottom)
+                    StandardTextField(
+                        textField: 
+                            TextField("Front Text", text: $frontText, axis: .vertical)
+                            .focused($focusedField, equals: .front),
+                        fieldText: $frontText
+                    )
+                    .padding(.bottom)
                     
-                    Text("Back Side")
-                        .font(.headline)
+                    makeFieldHeader(for: .back)
                     makeImageSection(for: .back)
-                    TextField("Back Text", text: $backText, axis: .vertical)
-                        .focused($focusedField, equals: .back)
-                        .textFieldStyle(StandardTextFieldStyle())
+                    StandardTextField(
+                        textField:
+                            TextField("Back Text", text: $backText, axis: .vertical)
+                                .focused($focusedField, equals: .back),
+                        fieldText: $backText
+                    )
+                    .padding(.bottom)
                 }
                 .padding()
             }

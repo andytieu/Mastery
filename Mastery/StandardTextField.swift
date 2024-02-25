@@ -26,14 +26,14 @@ struct StandardTextFieldStyle: TextFieldStyle {
 struct StandardTextField<Field: View>: View {
     private let textField: Field
     @Binding private var fieldText: String
-    private let labelText: String
+    private let labelText: String?
     private let charLimit: Int?
     private let charLimitWarning: Int // How many characters remaining until the user is warned about the character limit.
     
     init(
         textField: Field,
         fieldText: Binding<String>,
-        labelText: String,
+        labelText: String? = nil,
         charLimit: Int? = nil,
         charLimitWarning: Int = DEFAULT_CHAR_LIMIT_WARNING
     ) {
@@ -74,8 +74,10 @@ struct StandardTextField<Field: View>: View {
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
-                Text(labelText)
-                    .font(.headline)
+                if let labelText {
+                    Text(labelText)
+                        .font(.headline)
+                }
                 Spacer()
                 makeCharLimitWarningText()
             }
