@@ -63,7 +63,7 @@ struct CardMoveView: View {
             }
             .padding(.bottom)
             
-            Text("Move Card" + (cards.count == 1 ? "" : "s"))
+            Text("Move Cards")
                 .font(.largeTitle)
                 .bold()
                 .padding(.bottom)

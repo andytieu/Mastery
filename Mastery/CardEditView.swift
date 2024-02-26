@@ -131,13 +131,28 @@ struct CardEditView: View {
     }
     
     private func makeKeyboardBar() -> some ToolbarContent {
-        ToolbarItem(placement: .keyboard) {
+        ToolbarItemGroup(placement: .keyboard) {
             PhotosPicker(selection: $photoItem, matching: .images) {
                 Image(systemName: "camera.fill")
                     .foregroundStyle(.appLabel)
                     .bold()
             }
             .onChange(of: photoItem, asyncloadPhotoToData)
+            
+            Button(action: {
+                switch focusedField {
+                case .front:
+                    frontText += "___"
+                case .back:
+                    backText += "___"
+                case nil:
+                    return
+                }
+            }) {
+                Text("__")
+                    .font(.headline)
+                    .foregroundStyle(.appLabel)
+            }
         }
     }
     
