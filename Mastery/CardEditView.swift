@@ -115,6 +115,7 @@ struct CardEditView: View {
                     }
                 }) {
                     Image(systemName: "trash")
+                        .foregroundStyle(.appLabel)
                 }
             }
         }
@@ -132,26 +133,47 @@ struct CardEditView: View {
     
     private func makeKeyboardBar() -> some ToolbarContent {
         ToolbarItemGroup(placement: .keyboard) {
-            PhotosPicker(selection: $photoItem, matching: .images) {
-                Image(systemName: "camera.fill")
-                    .foregroundStyle(.appLabel)
-                    .bold()
-            }
-            .onChange(of: photoItem, asyncloadPhotoToData)
-            
-            Button(action: {
-                switch focusedField {
-                case .front:
-                    frontText += "___"
-                case .back:
-                    backText += "___"
-                case nil:
-                    return
+            HStack {
+                Group {
+                    PhotosPicker(selection: $photoItem, matching: .images) {
+                        Image(systemName: "photo")
+                            .font(.footnote)
+                            .foregroundStyle(.appLabel)
+                            .bold()
+                            .padding(5)
+                    }
+                    .onChange(of: photoItem, asyncloadPhotoToData)
+                    
+                    Button(action: {
+                        if focusedField == .front {
+                            frontText += "___"
+                        } else if focusedField == .back {
+                            backText += "___"
+                        }
+                    }) {
+                        Rectangle()
+                            .fill(.appLabel)
+                            .frame(width: 18, height: 2)
+                            .padding(5)
+                    }
+                    
+                    Spacer()
+                    
+                    Button(action: {
+                        if focusedField == .front {
+                            focusedField = .back
+                        } else if focusedField == .back {
+                            focusedField = .front
+                        }
+                    }) {
+                        Image(systemName: focusedField == .front ? "chevron.down" : "chevron.up")
+                            .foregroundStyle(.appLabel)
+                            .font(.footnote)
+                            .bold()
+                            .padding(5)
+                    }
                 }
-            }) {
-                Text("__")
-                    .font(.headline)
-                    .foregroundStyle(.appLabel)
+                .background(Circle().fill(.appBackground3))
             }
         }
     }

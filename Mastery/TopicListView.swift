@@ -230,6 +230,7 @@ struct TopicListView: View {
                 Button(action: {
                     if let index = currentTopic.cards.firstIndex(where: { $0.id == card.id }) {
                         currentTopic.cards.remove(at: index)
+                        selectedCards.removeAll {$0.id == card.id}
                         modelContext.delete(card)
                     }
                 }) {
